@@ -111,22 +111,24 @@ function analyzeSalesData(data, options) {
     // @TODO: Сортировка продавцов по прибыли
     const sortedSellers = sellerStats.slice().sort((a, b) => b.profit - a.profit);
     // @TODO: Назначение премий на основе ранжирования
-    sortedSellers.forEach((seller, index) => {
-    
+   sortedSellers.forEach((seller, index) => {
     seller.bonus = calculateBonus(index, sortedSellers.length, seller);
 
-    
     seller.top_products = Object.entries(seller.products_sold)
         .map(([sku, quantity]) => ({ sku, quantity }))
         .sort((a, b) => b.quantity - a.quantity)
         .slice(0, 10);
+
+    
+    seller.revenue = +seller.revenue.toFixed(2);
+    seller.profit = +seller.profit.toFixed(2);
 });
     // @TODO: Подготовка итоговой коллекции с нужными полями
     return sortedSellers.map(seller => ({
         seller_id: seller.seller_id,
         name: seller.name,
-        revenue: +seller.revenue.toFixed(2),
-        profit: +seller.profit.toFixed(2),
+        revenue: seller.revenue,
+        profit: seller.profit,
         sales_count: seller.sales_count,
         top_products: seller.top_products,
         bonus: +seller.bonus.toFixed(2)
