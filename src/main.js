@@ -93,21 +93,21 @@ function analyzeSalesData(data, options) {
         seller.sales_count += 1;
     
         record.items.forEach(item => {
-            const product = productIndex[item.sku]; // Получаем объект товара
+            const product = productIndex[item.sku];
             if (!product) return;
 
             const cost = product.purchase_price * item.quantity;
-            const revenue = options.calculateRevenue(item, product);
-            const profit = revenue - cost;
+            const revenue = +calculateRevenue(item, product).toFixed(2);
+            const profit = +(revenue - cost).toFixed(2);
             seller.revenue += revenue;
             seller.profit += profit;
 
             if (!seller.products_sold[item.sku]) {
-            seller.products_sold[item.sku] = 0;
-        }
-        seller.products_sold[item.sku] += item.quantity;
+                seller.products_sold[item.sku] = 0;
+            }
+            seller.products_sold[item.sku] += item.quantity;
+        });
     });
-});
     // @TODO: Сортировка продавцов по прибыли
     const sortedSellers = sellerStats.slice().sort((a, b) => b.profit - a.profit);
     // @TODO: Назначение премий на основе ранжирования
@@ -118,11 +118,7 @@ function analyzeSalesData(data, options) {
         .map(([sku, quantity]) => ({ sku, quantity }))
         .sort((a, b) => b.quantity - a.quantity)
         .slice(0, 10);
-
-    
-    seller.revenue = +seller.revenue.toFixed(2);
-    seller.profit = +seller.profit.toFixed(2);
-});
+    });
     // @TODO: Подготовка итоговой коллекции с нужными полями
     return sortedSellers.map(seller => ({
         seller_id: seller.seller_id,
