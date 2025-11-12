@@ -130,4 +130,4 @@ function analyzeSalesData(data, options) {
         top_products: seller.top_products,
         bonus: +((seller.bonus + Number.EPSILON) * 100 / 100).toFixed(2)
     }));
-} 
+}         
