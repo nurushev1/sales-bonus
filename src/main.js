@@ -87,27 +87,28 @@ function analyzeSalesData(data, options) {
 );
     // @TODO: Расчет выручки и прибыли для каждого продавца
     data.purchase_records.forEach(record => {
-        const seller = sellerIndex[record.seller_id];
-        if (!seller) return;
+    const seller = sellerIndex[record.seller_id];
+    if (!seller) return;
 
-        seller.sales_count += 1;
-    
-        record.items.forEach(item => {
-            const product = productIndex[item.sku];
-            if (!product) return;
+    seller.sales_count += 1;
 
-            const cost = product.purchase_price * item.quantity;
-            const revenue = +calculateRevenue(item, product).toFixed(2);
-            const profit = +(revenue - cost).toFixed(2);
-            seller.revenue = +(seller.revenue + revenue).toFixed(2);
-            seller.profit = +(seller.profit + profit).toFixed(2);
+    record.items.forEach(item => {
+        const product = productIndex[item.sku];
+        if (!product) return;
 
-            if (!seller.products_sold[item.sku]) {
-                seller.products_sold[item.sku] = 0;
-            }
-            seller.products_sold[item.sku] += item.quantity;
-        });
+        const cost = product.purchase_price * item.quantity;
+        const revenue = calculateRevenue(item, product);
+        const profit = revenue - cost;
+
+        seller.revenue += revenue;
+        seller.profit += profit;
+
+        if (!seller.products_sold[item.sku]) {
+            seller.products_sold[item.sku] = 0;
+        }
+        seller.products_sold[item.sku] += item.quantity;
     });
+});
     // @TODO: Сортировка продавцов по прибыли
     const sortedSellers = sellerStats.slice().sort((a, b) => b.profit - a.profit);
     // @TODO: Назначение премий на основе ранжирования
