@@ -71,13 +71,13 @@ function analyzeSalesData(data, options) {
     }
     // @TODO: Подготовка промежуточных данных для сбора статистики
     const sellerStats = data.sellers.map(seller => ({
-    seller_id: seller.id,
-    name: `${seller.first_name} ${seller.last_name}`,
-    revenue: 0,
-    profit: 0,
-    sales_count: 0,
-    products_sold: {}
-}));
+        seller_id: seller.id,
+        name: `${seller.first_name} ${seller.last_name}`,
+        revenue: 0,
+        profit: 0,
+        sales_count: 0,
+        products_sold: {}
+    }));
     // @TODO: Индексация продавцов и товаров для быстрого доступа
     const sellerIndex = Object.fromEntries(
     sellerStats.map(seller => [seller.seller_id, seller])
